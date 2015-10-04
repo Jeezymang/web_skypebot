@@ -6,6 +6,31 @@ Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
+//Attempts to fetch the Skype username from the cache.
+//////////////////////////////////////////////////////////
+function getSkypeUsername( nickName ) {
+	var name = "NULL";
+	for ( var key in usernameCache ) {
+		if ( usernameCache[key] == nickName ) {
+			name = key;
+			break;
+		}
+	}
+	return name;
+}
+
+//Checks if the Skype nickname is an operator.
+//////////////////////////////////////////////////////////
+function isOperator( nickName ) {
+	var skypeUsername = getSkypeUsername(nickName);
+	if ( getConfigValue("operator") != skypeUsername ) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
 //Returns text wrapped in a span with the specified color.
 //////////////////////////////////////////////////////////
 function coloredSpan( color, text ) {

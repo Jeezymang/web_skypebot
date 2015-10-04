@@ -82,7 +82,11 @@ commandHandles["toggle-config-value"] = {
 };
 
 commandHandles["set-config-value"] = {
-	"function": function( args ) {
+	"function": function( args, theMessage ) {
+		if ( !isOperator( theMessage.author ) ) {
+			sendChat("You must be operator to use this command.");
+			return;
+		}
 		var splitArgs = args.split(" ");
 		var keyName = splitArgs[0];
 		var keyValue = args.replace(keyName + " ", "");
@@ -129,7 +133,11 @@ commandHandles["runtime"] = {
 };
 
 commandHandles["ban-user"] = {
-	"function": function( args ) {
+	"function": function( args, theMessage ) {
+		if ( !isOperator( theMessage.author ) ) {
+			sendChat("You must be operator to use this command.");
+			return;
+		}
 		if ( args == "Bot" ) {
 			sendChat("You cannot ban the Bot.");
 			return;
@@ -146,7 +154,11 @@ commandHandles["ban-user"] = {
 };
 
 commandHandles["unban-user"] = {
-	"function": function( args ) {
+	"function": function( args, theMessage ) {
+		if ( !isOperator( theMessage.author ) ) {
+			sendChat("You must be operator to use this command.");
+			return;
+		}
 		if ( args == "Bot" )
 			return;
 		

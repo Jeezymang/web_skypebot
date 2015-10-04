@@ -40,7 +40,7 @@ function getMessageTime(element) {
 			splitTime[1] = splitTime[1].replace(" pm", "");
 			var dateObj = new Date();
 			if(innerHTML.indexOf("am") != -1) {
-				var hours = parseInt(splitTime[0]) - 1;
+				var hours = parseInt(splitTime[0]);
 				var minutes = parseInt(splitTime[1]);
 				dateObj.setHours(hours);
 				dateObj.setMinutes(minutes);
@@ -126,6 +126,7 @@ function addChatMessage(bubbleElement) {
 
 //When a new message has been examined, commands in this case.
 //Attempts to check for a command.
+//The message is also passed to the command, just in-case it's needed.
 //////////////////////////////////////////////////////////
 function onNewMessage(theMessage) {
 	if ( theMessage.text.indexOf(getConfigValue("command-prefix") ) == 0 ) {
@@ -138,7 +139,7 @@ function onNewMessage(theMessage) {
 		var cmdName = /^\S*/.exec(theCommand);
 		var cmdArgs = theCommand.replace(cmdName + " ", "");
 		if ( commandHandles.hasOwnProperty(cmdName) ) {
-			commandHandles[cmdName]["function"](cmdArgs);
+			commandHandles[cmdName]["function"](cmdArgs, theMessage);
 		}
 	}
 };
@@ -147,12 +148,26 @@ function onNewMessage(theMessage) {
 //Should ignore messages when first loaded, and then processes new messages.
 //It also should ignore commands from conversations that aren't the main-conversation.
 //The time check is a back-up for ignoring old messages.
+//Also attempts to cache the skype username.
 //////////////////////////////////////////////////////////
 function checkMessages() {
-	var theBubbles = document.getElementsByClassName("bubble");
-	for (var i=0; i < theBubbles.length; i++){
-		if ( !chatMessageSaved(theBubbles[i]) ) {
-			var theMessage = addChatMessage(theBubbles[i]);
+	$("swx-message.message.their:not(.me)").each(function(){
+		var theBubble = $(this).find("div.bubble");
+		if ( !theBubble || !theBubble[0] )
+			return;
+		theBubble = theBubble[0];
+		var avatarBubble = $(this).find("a");
+		var avatarImage = avatarBubble.find("img");
+		var urlText = avatarImage.attr("src");
+		if ( urlText ) {
+			urlText = urlText.replace("https://api.skype.com/users/", "");
+			var urlArray = urlText.split("/");
+			urlText = urlArray[0];
+			var nickName = getMessageAuthor(theBubble);
+			usernameCache[urlText] = nickName;
+		}
+		if ( !chatMessageSaved(theBubble) ) {
+			var theMessage = addChatMessage(theBubble);
 			var currentSeconds = new Date().getTime() / 1000;
 			if ( !firstRead && theMessage && theMessage.author != "Bot" ) {
 				var messageSeconds = ( parseInt( theMessage.time ) ) / 1000;
@@ -168,6 +183,6 @@ function checkMessages() {
 				}
 			}
 		}
-    }
+    });
     firstRead = false;
 };
