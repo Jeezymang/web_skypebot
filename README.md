@@ -17,6 +17,7 @@ Enable incognito mode for the extension.</br>
 Open a new Chrome incognito tab and login into web.skype.com.</br>
 Once everything is loaded, press the user icon to the right of your url input.</br>
 You should see the console, set the main conversation with set-config-value main-conversation [name-here].</br>
+Run the php/queries.sql on your database.</br>
 </br>
 <b>Node Modules</b></br>
 <ul>
