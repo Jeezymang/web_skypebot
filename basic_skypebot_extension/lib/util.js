@@ -1,0 +1,123 @@
+String.prototype.repeat = function( num ) {
+    return new Array( num + 1 ).join( this );
+};
+
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
+
+//Returns text wrapped in a span with the specified color.
+//////////////////////////////////////////////////////////
+function coloredSpan( color, text ) {
+	return ( "<span style='color: " + color + ";'>" + text + "</span>" );
+};
+
+//Returns a style string for html elements via an array with the style
+//properties as keys.
+//////////////////////////////////////////////////////////
+function htmlStyle( styleArray ) {
+	var styleString = "style='";
+	for ( var key in styleArray ) {
+		styleString += key + ": " + styleArray[key] + ";";
+	}
+	styleString += "'";
+	return styleString;
+};
+
+//Finds the first child within the parent with the specified class.
+//Most likely will be replaced later on.
+//////////////////////////////////////////////////////////
+function findClassInChildren(parent, name) {
+	if ( !parent ) return null;
+	if ( !parent.childNodes ) return null;
+	for (var i = 0, childNode; i <= parent.childNodes.length; i ++) {
+    	childNode = parent.childNodes[i];
+   		if (childNode && name == childNode.className) {
+        	return childNode;
+    	}
+    }
+};
+
+//Finds the first child within the parent with the specified tag.
+//Most likely will be replaced later on.
+//////////////////////////////////////////////////////////
+function findTagInChildren(parent, name) {
+	if ( !parent ) return null;
+	if ( !parent.childNodes ) return null;
+	for (var i = 0, childNode; i <= parent.childNodes.length; i ++) {
+    	childNode = parent.children[i];
+   		if (childNode && name == childNode.tagName) {
+        	return childNode;
+    	}
+    }
+};
+
+//Returns a timestamp for the specified time.
+//////////////////////////////////////////////////////////
+function getTimeStamp(time) {
+	var timeDate = new Date(time*1000);
+	var dayTime = "AM";
+	var theHours = timeDate.getHours() + 1;
+	var theMinutes = timeDate.getMinutes();
+	if ( theMinutes.toString().length == 1 )
+		theMinutes = "0" + theMinutes;
+	if ( theHours >= 12 ) {
+		dayTime = "PM";
+		if ( theHours > 12 )
+			theHours = theHours - 12;
+	}
+	var dateString = ( timeDate.getMonth() + 1 ) + "/" + timeDate.getDate() + "/" + timeDate.getFullYear() + " " + theHours + ":" + theMinutes + dayTime;
+	return dateString;
+};
+
+//Returns a string with the stats on how long the bot has been running.
+//////////////////////////////////////////////////////////
+function getBotRuntime() {
+	var currentTime = new Date().getTime();
+	var diffTime = currentTime - startTime;
+	var seconds = Math.round( diffTime / 1000 % 60 );
+	var minutes = Math.round( diffTime / (60 * 1000) % 60 );
+	var hours = Math.round( diffTime / (60 * 60 * 1000) % 24 );
+	var days = Math.round( diffTime / (24 * 60 * 60 * 1000) );
+	return ( [seconds, minutes, hours, days] );
+};
+
+//For setting the config values within config.js
+//////////////////////////////////////////////////////////
+function setConfigValue(key, val) {
+	if ( configValues.hasOwnProperty(key) ) {
+		var dataType = configValues[key].type;
+		switch( dataType ) {
+			case "bool":
+				var boolVal = val;
+				if(typeof(boolVal) == "string") {
+					if(boolVal.toLowerCase() == "true")
+						boolVal = true;
+					else
+						boolVal = false;
+				}
+				configValues[key].val = boolVal;
+			break;
+			case "string":
+				configValues[key].val = val;
+			break;
+			case "number":
+				var numVal = val;
+				if (typeof(numVal) == "string")
+					numVal = parseInt(numVal);
+				configValues[key].val = numVal;
+			break;
+		}
+	}
+};
+
+//For getting the config values within config.js
+//////////////////////////////////////////////////////////
+function getConfigValue(key) {
+	if(configValues.hasOwnProperty(key)) {
+		return configValues[key].val;
+	}
+	else {
+		return null;
+	}
+};
