@@ -1,5 +1,5 @@
 # web_skypebot
-A Chrome extension that acts as a bot for Skype, a work in progress.</br>
+A Chrome extension that acts as a bot for Skype, a work in progress.</br></br>
 <b>Disclaimer</b></br>
 This is a work in progress, it's still buggy and inefficient.
 </br>
@@ -9,7 +9,7 @@ You may need to visit your https server/local url in your web browser to create 
 </br>
 <b>Setting up the SkypeBot</b></br>
 </br>
-<u>Basic Setup</u></br>
+<b>Basic Setup</b></br></br>
 Go to the extensions management page.</br>
 Enable developer mode.</br>
 Load an unpackaged extension, choose the skypebot_extension folder.</br>
@@ -18,7 +18,7 @@ Open a new Chrome incognito tab and login into web.skype.com.</br>
 Once everything is loaded, press the user icon to the right of your url input.</br>
 You should see the console, set the main conversation with set-config-value main-conversation [name-here].</br>
 </br>
-<u>Node Modules</u></br>
+<b>Node Modules</b></br>
 <ul>
     <li>Steam ( npm install steam )</li>
     <li>irc ( npm install irc )</li>
@@ -26,7 +26,7 @@ You should see the console, set the main conversation with set-config-value main
     <li>lua.vm.js ( https://github.com/kripken/lua.vm.js )</br>You will need to compile Lua or get binaries.</li>
 </ul>
 </br>
-<u>Configuration</u></br>
+<b>Configuration</b></br>
 </br>
 <b>skypebot_extension/config.js</b></br>
 <ul>
