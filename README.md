@@ -6,6 +6,8 @@ This is a work in progress, it's still buggy and inefficient.
 The bot should still work without the configuration below, just less features.</br>
 You may need to visit your https server/local url in your web browser to create a certificate.
 </br>
+You don't need to have two seperate nodejs servers, it's just what I did to cut down on my web server usage.
+</br>
 </br>
 <b>Setting up the SkypeBot</b></br>
 </br>
