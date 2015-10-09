@@ -138,8 +138,12 @@ commandHandles["ban-user"] = {
 			sendChat("You must be operator to use this command.");
 			return;
 		}
-		if ( args == "Bot" ) {
+		if ( args == getConfigValue("bot-name") ) {
 			sendChat("You cannot ban the Bot.");
+			return;
+		}
+		if ( !skypeUsernameExists( args ) ) {
+			sendChat("That username does not exist.");
 			return;
 		}
 		if ( bannedUsers.hasOwnProperty(args) ) {
@@ -159,9 +163,9 @@ commandHandles["unban-user"] = {
 			sendChat("You must be operator to use this command.");
 			return;
 		}
-		if ( args == "Bot" )
+		if ( args == getConfigValue("bot-name") )
 			return;
-		
+
 		if ( bannedUsers.hasOwnProperty(args) ) {
 			sendChat( "User " + args + " has been unbanned." );
 			delete bannedUsers[args];
@@ -171,4 +175,27 @@ commandHandles["unban-user"] = {
 		}
 	},
 	"help-text": "Unbans the specified user."
+};
+
+commandHandles["users"] = {
+	"function": function() {
+		var users = getAllSkypeUsers();
+		var printString = "Cached Users: \n";
+		users.forEach(function(value){
+			printString += value + " ( " + usernameCache[value] + " )\n";
+		});
+		sendChat(printString);
+	},
+	"help-text": "Lists all cached skype users."
+};
+
+commandHandles["banned-users"] = {
+	"function": function() {
+		var printString = "Banned Users: \n";
+		for( var key in bannedUsers ) {
+			printString += key + "\n";
+		}
+		sendChat(printString);
+	},
+	"help-text": "Lists all currently banned users."
 };

@@ -5,6 +5,9 @@ var configValues = {};
 //Basically what the help text explains, you may want to set this.
 //////////////////////////////////////////////////////////
 configValues["operator"] = { type: "string", val: "", help: "The Skype username that has authority over the bot."};
+//Same as above, this config value is used to prevent the bot from being banned.
+//////////////////////////////////////////////////////////
+configValues["bot-name"] = { type: "string", val: "", help: "The Skype username for the bot."};
 //The prefix for commands, for example !skypebot a-command
 //////////////////////////////////////////////////////////
 configValues["command-prefix"] = { type: "string", val: "!skypebot", help: "The prefix for the bot's commands." };

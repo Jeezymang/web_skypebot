@@ -21,9 +21,40 @@ var domain = require("domain").create();
 var luaState = new LuaVM.Lua.State();
 var initialLua = " \
 _GReturnString = '' \
+sandboxEnv = { \
+  ipairs = ipairs, \
+  next = next, \
+  print = print, \
+  pairs = pairs, \
+  tonumber = tonumber, \
+  tostring = tostring, \
+  type = type, \
+  unpack = unpack, \
+  string = { byte = string.byte, char = string.char, find = string.find, \
+    format = string.format, gmatch = string.gmatch, gsub = string.gsub, \
+    len = string.len, lower = string.lower, match = string.match, \
+    rep = string.rep, reverse = string.reverse, sub = string.sub, \
+    upper = string.upper \
+  }, \
+  table = { insert = table.insert, maxn = table.maxn, remove = table.remove, \
+    sort = table.sort \
+  }, \
+  math = { abs = math.abs, acos = math.acos, asin = math.asin, \
+    atan = math.atan, atan2 = math.atan2, ceil = math.ceil, cos = math.cos, \
+    cosh = math.cosh, deg = math.deg, exp = math.exp, floor = math.floor, \
+    fmod = math.fmod, frexp = math.frexp, huge = math.huge, \
+    ldexp = math.ldexp, log = math.log, log10 = math.log10, max = math.max, \
+    min = math.min, modf = math.modf, pi = math.pi, pow = math.pow, \
+    rad = math.rad, random = math.random, sin = math.sin, sinh = math.sinh, \
+    sqrt = math.sqrt, tan = math.tan, tanh = math.tanh \
+  }, \
+  os = { clock = os.clock, difftime = os.difftime, time = os.time }, \
+  _GReturnString = _GReturnString, \
+} \
 function print(...) \
-  _GReturnString = _GReturnString .. (...) \
+  sandboxEnv['_GReturnString'] = sandboxEnv['_GReturnString'] .. (...) \
 end \
+sandboxEnv.print = print \
 local st = os.clock() \
 function runtime_check() \
   if(os.clock() - st > 5) then \
@@ -69,9 +100,18 @@ function CommunicateToPlayers(msg) {
   }
 }
 
+function WrapLuaFunction(code) {
+  var codeString = "function safeFunction(_ENV) ";
+  codeString += " " + code;
+  codeString += " end";
+  return codeString;
+}
+
 function RunLuaCode(code) {
-  var codeString = code;
-  codeString += " " + printReturnLua;
+  var codeString = WrapLuaFunction(code);
+  codeString += " " + "sandboxEnv['_GReturnString'] = ''";
+  codeString += " " + "local status, err = pcall(function() safeFunction(sandboxEnv) end)";
+  codeString += " " + "if not ( status ) then return err else return sandboxEnv['_GReturnString'] end";
   var returnValue = "";
   try {
     var returnArray = luaState.execute(codeString);

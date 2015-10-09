@@ -133,8 +133,12 @@ conCommandHandles["runtime"] = {
 conCommandHandles["ban-user"] = {
 	"function": function( args ) {
 		var userString = coloredSpan( miscColor, args );
-		if ( args == "Bot" ) {
+		if ( args == getConfigValue("bot-name") ) {
 			addConsoleText(coloredSpan( errorColor, "You cannot ban the Bot."));
+			return;
+		}
+		if ( !skypeUsernameExists( args ) ) {
+			addConsoleText(coloredSpan( errorColor, "That username does not exist."));
 			return;
 		}
 		if ( bannedUsers.hasOwnProperty(args) ) {
@@ -151,7 +155,7 @@ conCommandHandles["ban-user"] = {
 conCommandHandles["unban-user"] = {
 	"function": function( args ) {
 		var userString = coloredSpan( miscColor, args );
-		if ( args == "Bot" )
+		if ( args == getConfigValue("bot-name") )
 			return;
 		
 		if ( bannedUsers.hasOwnProperty(args) ) {
@@ -164,4 +168,25 @@ conCommandHandles["unban-user"] = {
 		}
 	},
 	"help-text": commandHandles["unban-user"]["help-text"]
+};
+
+conCommandHandles["users"] = {
+	"function": function() {
+		var users = getAllSkypeUsers();
+		addConsoleText(coloredSpan(successColor, "Cached Users: "));
+		users.forEach(function(value){
+			addConsoleText(coloredSpan(miscColor, value) + coloredSpan(errorColor, " ( " + usernameCache[value] + " )" ));
+		});
+	},
+	"help-text": commandHandles["users"]["help-text"]
+};
+
+conCommandHandles["banned-users"] = {
+	"function": function() {
+		addConsoleText(coloredSpan(successColor, "Banned Users: "));
+		for( var key in bannedUsers ) {
+			addConsoleText(coloredSpan(miscColor, key));
+		}
+	},
+	"help-text": commandHandles["banned-users"]["help-text"]
 };

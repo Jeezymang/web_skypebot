@@ -1,9 +1,10 @@
 //Submits the input to chat, needs a brief amount of time for the button to activate I believe.
 //////////////////////////////////////////////////////////
 function sendChat(text) {
-    if ( isReplying ) 
+    if ( isReplying ) {
+        queuedMessages.push(text);
         return;
-
+    }
     var fragmentElement = $(".chatContainer").find('.fragment:not(".hide")');
     var textAreaElement = fragmentElement.find("textarea");
     var buttonElement = fragmentElement.find(".circle.send-button");
@@ -15,6 +16,10 @@ function sendChat(text) {
     setTimeout( function() { 
         buttonElement.click();
         isReplying = false;
+        if ( queuedMessages.length > 0 ) {
+            sendChat(queuedMessages[0]);
+            queuedMessages.shift();
+        }
     }, 100);
 };
 

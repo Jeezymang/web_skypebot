@@ -6,18 +6,28 @@ function getActiveConversation() {
 		return titleElement.html();
 };
 
-//Gets the conversation from the specified a.recent.message element.
+//Gets the conversation from the specified a.recent.message element, or if
+//there is a group call going on, it will adjust its search accordingly.
 //////////////////////////////////////////////////////////
 function getConversationName(convoElement) {
-	return(convoElement.find(".topic").html());
+	var theElement = convoElement.find(".topic");
+	if (!theElement.html()) {
+		theElement = convoElement.find(".tileName").find("h4");
+	}
+	return(theElement.html());
 };
 
 //Gets all of the a-recent-message elements and adds them to an array.
+//Also adds the group call conversation element to the array if it exists.
 //////////////////////////////////////////////////////////
 function getConversations() {
 	var convoArray = [];
 	$("swx-recent-item").each( function( ) {
 		var theElement = $(this).find("a.recent.message");
+		convoArray.push(theElement);
+	});
+	$("swx-current-call").each( function( ) {
+		var theElement = $(this).find("a.recent.joinCall");
 		convoArray.push(theElement);
 	});
 	return convoArray;
@@ -57,7 +67,7 @@ var unreadConvoMessages = {};
 function checkConversations() {
 	var theArray = getConversations();
 	for (var i=0; i < theArray.length; i++){
-		if( theArray[i].attr('class').indexOf("unread") != -1 && theArray[i].attr('class').indexOf("active") == -1 ) {
+		if( theArray[i] && theArray[i].attr('class') && theArray[i].attr('class').indexOf("unread") != -1 && theArray[i].attr('class').indexOf("active") == -1 ) {
 			var shouldClick = true;
 			if(unreadConvoMessages.hasOwnProperty(getConversationName(theArray[i]))){
 				if ( unreadConvoMessages[getConversationName(theArray[i])] == parseInt(theArray[i].find("p.fontSize-h4").html()) )

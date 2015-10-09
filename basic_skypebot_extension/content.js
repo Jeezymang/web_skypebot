@@ -14,6 +14,8 @@ var ignoreInput = false;
 
 var usernameCache = {};
 
+var queuedMessages = Array();
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
@@ -26,6 +28,14 @@ chrome.runtime.onMessage.addListener(
       })();
       startTime = new Date().getTime();
       setupConsole();
+      if(getConfigValue("main-conversation") == "") {
+        setConfigValue("main-conversation", getActiveConversation());
+        addConsoleText(coloredSpan("#F5A9A9", "Main Conversation has not been set, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
+      }
+      else if (!conversationExists(getConfigValue("main-conversation"))) {
+        setConfigValue("main-conversation", getActiveConversation());
+        addConsoleText(coloredSpan("#F5A9A9", "The Main Conversation is set to a non-existing conversation, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
+      }
     }
   }
 );

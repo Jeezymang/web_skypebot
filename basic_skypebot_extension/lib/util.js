@@ -19,6 +19,29 @@ function getSkypeUsername( nickName ) {
 	return name;
 }
 
+//Checks the username cache to see if the Skype username exists.
+//////////////////////////////////////////////////////////
+function skypeUsernameExists( skypeName ) {
+	var doesExist = false;
+	for ( var key in usernameCache ) {
+		if ( key == skypeName ) {
+			doesExist = true;
+			break;
+		}
+	}
+	return doesExist;
+};
+
+//Returns an array of all the cached Skype usernames.
+//////////////////////////////////////////////////////////
+function getAllSkypeUsers() {
+	var userArray = new Array();
+	for ( var key in usernameCache ) {
+		userArray.push(key);
+	}
+	return userArray;
+};
+
 //Checks if the Skype nickname is an operator.
 //////////////////////////////////////////////////////////
 function isOperator( nickName ) {

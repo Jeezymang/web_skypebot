@@ -132,9 +132,9 @@ function onNewMessage(theMessage) {
 	if ( theMessage.text.indexOf(getConfigValue("command-prefix") ) == 0 ) {
 		if ( theMessage.text == getConfigValue("command-prefix") ) 
 			return;
-		if ( bannedUsers.hasOwnProperty(theMessage.author) ) {
+		var skypeUsername = getSkypeUsername(theMessage.author);
+		if ( bannedUsers.hasOwnProperty(skypeUsername) )
 			return;
-		}
 		var theCommand = theMessage.text.replace(getConfigValue("command-prefix") + " ", "");
 		var cmdName = /^\S*/.exec(theCommand);
 		var cmdArgs = theCommand.replace(cmdName + " ", "");
