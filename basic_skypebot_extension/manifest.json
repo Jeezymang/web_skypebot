@@ -1,19 +1,13 @@
 {
   "manifest_version": 2,
   "name": "Basic Skype Bot",
-  "version": "0.1",
+  "version": "0.2",
   "content_scripts": [
 	  {
 	    "matches": [
 	      "<all_urls>"
 	    ],
-	    "js": ["plugins/jquery-2.1.4.min.js", "plugins/sendkeys.js", "plugins/bilrange.js", "lib/conversations.js", "lib/messages.js", "lib/chat.js", "lib/util.js", "config.js", "lib/commands.js", "lib/console_commands.js", "content.js" ]
+	    "js": ["plugins/jquery-2.1.4.min.js", "plugins/sendkeys.js", "plugins/bilrange.js", "config.js", "lib/conversations.js", "lib/messages.js", "lib/chat.js", "lib/util.js", "lib/commands.js", "lib/console_commands.js", "content.js" ]
 	  }
-	],
-	"browser_action": {
-  		"default_icon": "icon.png"
-	},
-	"background": {
-  		"scripts": ["background.js"]
-	}
+	]
 }

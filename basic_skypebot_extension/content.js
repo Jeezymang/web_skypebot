@@ -1,5 +1,7 @@
 var chatMessages = {};
 
+var convoNameChanges = {};
+
 var firstRead = true;
 
 var isReplying = false;
@@ -16,29 +18,46 @@ var usernameCache = {};
 
 var queuedMessages = Array();
 
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if( request.message === "clicked_browser_action" ) {
-      (function(){
-        //The endless loop for the bot, default every one second.
-        //////////////////////////////////////////////////////////
-        checkConversations();
-        console.log("Bot is running.");
-          setTimeout(arguments.callee, 1000);
-      })();
-      startTime = new Date().getTime();
-      setupConsole();
-      if(getConfigValue("main-conversation") == "") {
-        setConfigValue("main-conversation", getActiveConversation());
-        addConsoleText(coloredSpan("#F5A9A9", "Main Conversation has not been set, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
-      }
-      else if (!conversationExists(getConfigValue("main-conversation"))) {
-        setConfigValue("main-conversation", getActiveConversation());
-        addConsoleText(coloredSpan("#F5A9A9", "The Main Conversation is set to a non-existing conversation, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
-      }
-    }
+function isInIncognito() {
+  if ( window.document.title == "Sign into your Skype account" ) {
+    attemptLogin();
   }
-);
+  else if ( window.document.title == "Skype" ) {
+    checkIfPageReady();
+  }
+};
+
+function notInIncognito() {
+  if(getConfigValue("incognito-only"))
+    console.log("Bot failed to start, you're not in incognito.");
+  else
+    isInIncognito();
+};
+
+var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+if (fs) {
+  fs(window.TEMPORARY, 100, notInIncognito, isInIncognito);
+};
+
+function setupBot() {
+  setupConsole();
+  (function(){
+    //The endless loop for the bot, default every one second.
+    //////////////////////////////////////////////////////////
+    checkConversations();
+    console.log("Bot is running.");
+      setTimeout(arguments.callee, 1000);
+  })();
+  startTime = new Date().getTime();
+  if(getConfigValue("main-conversation") == "") {
+    setConfigValue("main-conversation", getActiveConversation());
+    addConsoleText(coloredSpan("#F5A9A9", "Main Conversation has not been set, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
+  }
+  else if (!conversationExists(getConfigValue("main-conversation"))) {
+    setConfigValue("main-conversation", getActiveConversation());
+    addConsoleText(coloredSpan("#F5A9A9", "The Main Conversation is set to a non-existing conversation, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
+  }
+};
 
 function setupConsole() {
   var consoleDiv = document.createElement('div');

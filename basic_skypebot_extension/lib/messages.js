@@ -78,6 +78,9 @@ function getMessageText(element) {
 		var pMessageElement = findTagInChildren( contentElement, "P" );
 		if ( pMessageElement )
 			var messageText = pMessageElement.innerHTML;
+		var aLinkElement = findTagInChildren(pMessageElement, "A");
+			if (aLinkElement)
+				messageText = aLinkElement.innerHTML;
 	}
 	return messageText;
 };
@@ -139,6 +142,13 @@ function onNewMessage(theMessage) {
 		var cmdName = /^\S*/.exec(theCommand);
 		var cmdArgs = theCommand.replace(cmdName + " ", "");
 		if ( commandHandles.hasOwnProperty(cmdName) ) {
+			var hasOperatorFlag = commandHandles[cmdName].hasOwnProperty("operator-only");
+			if ( hasOperatorFlag && commandHandles[cmdName]["operator-only"] ) {
+				if ( !isOperator( theMessage.author ) ) {
+					sendChat("You must be operator to use this command.");
+					return;
+				}
+			}
 			commandHandles[cmdName]["function"](cmdArgs, theMessage);
 		}
 	}
@@ -149,8 +159,35 @@ function onNewMessage(theMessage) {
 //It also should ignore commands from conversations that aren't the main-conversation.
 //The time check is a back-up for ignoring old messages.
 //Also attempts to cache the skype username.
+//(11/07/2015) - Constantly scrolls to bottom of the chat now.
+//Checks if the conversation name has changed, and updates the main-conversation.
 //////////////////////////////////////////////////////////
 function checkMessages() {
+	var convoElement = $("div.conversation.scrollable.scrollViewport");
+  	convoElement.scrollTop(convoElement[0].scrollHeight);
+  	var lastConvoNameChange = $("swx-message.message.showName.their.participant.swx-in-viewport").last();
+	if (lastConvoNameChange) {
+		var theBubble = $(lastConvoNameChange).find("div.bubble");
+		if (theBubble && theBubble[0]) {
+			var id = getMessageID(theBubble[0]);
+			var text = getMessageText(theBubble[0]);
+			if(!convoNameChanges.hasOwnProperty(id)) {
+				convoNameChanges[id] = text;
+				if(!conversationExists(getConfigValue("main-conversation")))
+				{
+					var convoNameRegex = /'(.*)'?/gi;
+					var matchArray = text.match(convoNameRegex);
+					if(matchArray && matchArray.length > 0)
+					{
+						var newConvoName = matchArray[0].substring(1, matchArray[0].length);
+						newConvoName = newConvoName.substring(0, newConvoName.length-1);
+						setConfigValue("main-conversation", newConvoName);
+						addConsoleText(coloredSpan("#F5A9A9", "The Main Conversation name was changed, ") + coloredSpan("#BCF5A9", "setting it to [ " + coloredSpan("#CEF6F5", getConfigValue("main-conversation" )) + " ]"));
+					}
+				}
+			}
+		}
+	};
 	$("swx-message.message.their:not(.me)").each(function(){
 		var theBubble = $(this).find("div.bubble");
 		if ( !theBubble || !theBubble[0] )
@@ -167,6 +204,11 @@ function checkMessages() {
 			usernameCache[urlText] = nickName;
 		}
 		if ( !chatMessageSaved(theBubble) ) {
+			//Removes the thumbnails that sometimes show up when putting links in chat.
+			var thumbnail = $(this).find("div.bubble").find("div.content").find("div");
+			if (thumbnail)
+				thumbnail.remove();
+
 			var theMessage = addChatMessage(theBubble);
 			var currentSeconds = new Date().getTime() / 1000;
 			if ( !firstRead && theMessage && theMessage.author != "Bot" ) {

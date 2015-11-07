@@ -6,6 +6,28 @@ Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
+//Attempts to login.
+//////////////////////////////////////////////////////////
+function attemptLogin() {
+	$("input#username").val(SKYPEBOT_USERNAME);
+    $("input#password").val(SKYPEBOT_PASSWORD);
+    $(".btn.primaryCta").click();
+}
+
+//Checks if Skype has completed loaded.
+//////////////////////////////////////////////////////////
+function checkIfPageReady() {
+	var splashElement = $("div.shellSplashContent");
+	if ( splashElement ) {
+		if( splashElement.is(":visible") ) {
+			setTimeout(checkIfPageReady, 1000);
+		}
+		else {
+			setTimeout(setupBot, 3000);
+		}
+	}
+};
+
 //Attempts to fetch the Skype username from the cache.
 //////////////////////////////////////////////////////////
 function getSkypeUsername( nickName ) {
@@ -17,7 +39,7 @@ function getSkypeUsername( nickName ) {
 		}
 	}
 	return name;
-}
+};
 
 //Checks the username cache to see if the Skype username exists.
 //////////////////////////////////////////////////////////

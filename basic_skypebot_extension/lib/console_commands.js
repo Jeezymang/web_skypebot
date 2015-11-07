@@ -4,6 +4,14 @@ var successColor = "#BCF5A9";
 var errorColor = "#F5A9A9";
 var miscColor = "#CEF6F5";
 
+conCommandHandles["focus-current-conversation"] = {
+	"function": function( args ) {
+		setConfigValue("main-conversation", getActiveConversation());
+		addConsoleText(coloredSpan(successColor, "Set the main conversation to the current conversation."));
+	},
+	"help-text": commandHandles["focus-current-conversation"]["help-text"]
+};
+
 conCommandHandles["set-conversation-name"] = {
 	"function": function( args ) {
 		commandHandles["set-conversation-name"]["function"](args);

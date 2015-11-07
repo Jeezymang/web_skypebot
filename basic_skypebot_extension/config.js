@@ -1,4 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////
+// Login Info - Didn't set this as config values for security reasons.
+
+var SKYPEBOT_USERNAME = "a.throwaway.account";
+
+var SKYPEBOT_PASSWORD = "aterriblepassword1234";
+
+///////////////////////////////////////////////////////////////////////////
 // Bot Values
 
 var configValues = {};
@@ -19,4 +26,7 @@ configValues["main-conversation"] = { type: "string", val: "", help: "The name o
 	else
 		return [false, "Conversation [ " + convoName + " ] does ont exist."];
 } };
+//Whether or not the bot will only start up in Incognito.
+//////////////////////////////////////////////////////////
+configValues["incognito-only"] = { type: "bool", val: true, help: "Whether or not the bot will start up in Incognito only."};
 configValues["ignore-input"] = { type: "bool", val: false, help: "Whether or not the bot should ignore all user input." };

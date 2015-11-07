@@ -1,5 +1,14 @@
 var commandHandles = {};
 
+commandHandles["focus-current-conversation"] = {
+	"function": function( args ) {
+		setConfigValue("main-conversation", getActiveConversation());
+		sendChat("Set the main conversation to the current conversation.");
+	},
+	"help-text": "Sets the main conversation config value to the current conversation.",
+	"operator-only": true
+};
+
 //Attempts to set the conversation name and set the main conversation to the new name.
 //////////////////////////////////////////////////////////
 commandHandles["set-conversation-name"] = {
@@ -18,7 +27,7 @@ commandHandles["set-conversation-name"] = {
 		}, 100);
 	},
 	"help-text": "Sets the conversation name to the specified value."
-}
+};
 
 commandHandles["command-help"] = {
 	"function": function( args ) {
@@ -83,10 +92,6 @@ commandHandles["toggle-config-value"] = {
 
 commandHandles["set-config-value"] = {
 	"function": function( args, theMessage ) {
-		if ( !isOperator( theMessage.author ) ) {
-			sendChat("You must be operator to use this command.");
-			return;
-		}
 		var splitArgs = args.split(" ");
 		var keyName = splitArgs[0];
 		var keyValue = args.replace(keyName + " ", "");
@@ -110,7 +115,8 @@ commandHandles["set-config-value"] = {
 			sendChat("Config Value [ " + keyName +  " ] doesn't exist.");
 		}
 	},
-	"help-text": "Sets the specified config value."
+	"help-text": "Sets the specified config value.",
+	"operator-only": true
 };
 
 commandHandles["commands"] = {
@@ -134,10 +140,6 @@ commandHandles["runtime"] = {
 
 commandHandles["ban-user"] = {
 	"function": function( args, theMessage ) {
-		if ( !isOperator( theMessage.author ) ) {
-			sendChat("You must be operator to use this command.");
-			return;
-		}
 		if ( args == getConfigValue("bot-name") ) {
 			sendChat("You cannot ban the Bot.");
 			return;
@@ -154,15 +156,12 @@ commandHandles["ban-user"] = {
 			bannedUsers[args] = true;
 		}
 	},
-	"help-text": "Bans the specified user from using any commands."
+	"help-text": "Bans the specified user from using any commands.",
+	"operator-only": true
 };
 
 commandHandles["unban-user"] = {
 	"function": function( args, theMessage ) {
-		if ( !isOperator( theMessage.author ) ) {
-			sendChat("You must be operator to use this command.");
-			return;
-		}
 		if ( args == getConfigValue("bot-name") )
 			return;
 
@@ -174,7 +173,8 @@ commandHandles["unban-user"] = {
 			sendChat( args + " is not currently banned.");
 		}
 	},
-	"help-text": "Unbans the specified user."
+	"help-text": "Unbans the specified user.",
+	"operator-only": true
 };
 
 commandHandles["users"] = {
