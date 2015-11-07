@@ -5,7 +5,8 @@ This is a work in progress, it's still buggy and inefficient.
 </br>
 You can basically ignore everything in this disclaimer if you use basic_skypebot_extension.</br>
 Just make sure to set the login info inside of config.js. </br>
-(11/07/2015)<b>The first Skypebot is now discontinued, it's recommended that you use the basic one.</b>
+(11/07/2015)<b>The first Skypebot is now discontinued</br> 
+It's recommended that you use the basic one.</b>
 </br>
 The bot should still work without the configuration below, just less features.</br>
 You may need to visit your https server/local url in your web browser to create a certificate.
