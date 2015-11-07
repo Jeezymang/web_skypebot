@@ -23,7 +23,9 @@ Step 3:Load an unpackaged extension, choose the skypebot_extension folder.</br>
 Step 3 (Optional):Instead load the basic_skypebot_extension folder.</br>
 You can use the extension without any configuration or external scripts then.</br>
 Step 4: Enable incognito mode for the extension.</br>
-Step 5: Open a new Chrome incognito tab and login into web.skype.com.</br>
+Step 5: Go to web.skype.com, the bot will login and start up automatically as long as</br>
+the login info inside of config.js is configured. By default it's set to a throwaway account.</br>
+Step 5 (Outdated):Open a new Chrome incognito tab and login into web.skype.com.</br>
 Once everything is loaded, press the user icon to the right of your url input.</br>
 You should see the console, set the main conversation with set-config-value main-conversation [name-here].</br>
 Step 6 (Optional):Run the php/queries.sql on your database if using the external scripts.</br>
