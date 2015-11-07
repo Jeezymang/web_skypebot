@@ -4,6 +4,33 @@ var successColor = "#BCF5A9";
 var errorColor = "#F5A9A9";
 var miscColor = "#CEF6F5";
 
+conCommandHandles["clear-config-values"] = {
+	"function": function( args ) {
+		clearConfigValues();
+		addConsoleText(coloredSpan(successColor, "Cleared the config values from the local storage."));
+	},
+	"help-text": commandHandles["clear-config-values"]["help-text"]
+};
+
+conCommandHandles["load-config-values"] = {
+	"function": function( args ) {
+		var didLoad = loadConfigValues();
+		if(didLoad)
+			addConsoleText(coloredSpan(successColor, "Loaded the config values from the local storage."));
+		else
+			addConsoleText(coloredSpan(errorColor, "No config values found inside of the local storage."));
+	},
+	"help-text": commandHandles["load-config-values"]["help-text"]
+};
+
+conCommandHandles["save-config-values"] = {
+	"function": function( args ) {
+		saveConfigValues();
+		addConsoleText(coloredSpan(successColor, "Saved the config values inside of the local storage."));
+	},
+	"help-text": commandHandles["save-config-values"]["help-text"]
+};
+
 conCommandHandles["focus-current-conversation"] = {
 	"function": function( args ) {
 		setConfigValue("main-conversation", getActiveConversation());

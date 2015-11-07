@@ -6,6 +6,36 @@ Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
+//Clears the config values from the local storage.
+//////////////////////////////////////////////////////////
+function clearConfigValues() {
+	localStorage.removeItem("skypebot_config");
+	for (var key in configValues) {
+		localStorage.removeItem(key);
+	}
+};
+
+//Saves the config values to the local storage.
+//////////////////////////////////////////////////////////
+function saveConfigValues() {
+	localStorage.setItem("skypebot_config", true);
+	for (var key in configValues) {
+		localStorage.setItem(key, getConfigValue(key));
+	}
+};
+
+//Loads the config values from the local storage.
+//////////////////////////////////////////////////////////
+function loadConfigValues() {
+	if (localStorage.getItem("skypebot_config") == null) {
+		return false;
+	}
+	for (var key in configValues) {
+		setConfigValue(key, localStorage.getItem(key));
+	}
+	return true;
+};
+
 //Attempts to login.
 //////////////////////////////////////////////////////////
 function attemptLogin() {

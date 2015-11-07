@@ -1,5 +1,35 @@
 var commandHandles = {};
 
+commandHandles["save-config-values"] = {
+	"function": function( args ) {
+		saveConfigValues();
+		sendChat("Saved the config values inside of the local storage.");
+	},
+	"help-text": "Saves all config values to the local storage.",
+	"operator-only": true
+};
+
+commandHandles["load-config-values"] = {
+	"function": function( args ) {
+		var didLoad = loadConfigValues();
+		if (didLoad)
+			sendChat("Loaded the config values from the local storage.");
+		else
+			sendChat("No config values could be found inside fo the local storage");
+	},
+	"help-text": "Loads the config values from the local storage.",
+	"operator-only": true
+};
+
+commandHandles["clear-config-values"] = {
+	"function": function( args ) {
+		clearConfigValues();
+		sendChat("Cleared the config values from the local storage.");
+	},
+	"help-text": "Clears the config values from the local storage.",
+	"operator-only": true
+};
+
 commandHandles["focus-current-conversation"] = {
 	"function": function( args ) {
 		setConfigValue("main-conversation", getActiveConversation());

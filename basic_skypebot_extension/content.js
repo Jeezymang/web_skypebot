@@ -41,6 +41,7 @@ if (fs) {
 
 function setupBot() {
   setupConsole();
+  conCommandHandles["load-config-values"]["function"]();
   (function(){
     //The endless loop for the bot, default every one second.
     //////////////////////////////////////////////////////////
